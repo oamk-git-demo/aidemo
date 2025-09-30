@@ -73,6 +73,24 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+  // Add new task (Issue #8: Create tasks)
+  app.post('/api/tasks', async (req, res) => {
+    try {
+      const { user_id, title, description } = req.body;
+      if (!user_id || !title) {
+        return res.status(400).json({ error: 'user_id and title are required' });
+      }
+      const result = await pool.query(
+        'INSERT INTO tasks (user_id, title, description) VALUES ($1, $2, $3) RETURNING *',
+        [user_id, title, description || null]
+      );
+      res.status(201).json(result.rows[0]);
+    } catch (err) {
+      console.error('Error creating task:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'AI Demo Backend is running' });
