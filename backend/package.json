@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "aidemo-backend",
   "version": "1.0.0",
   "description": "Backend API for AI Demo Task Management",
